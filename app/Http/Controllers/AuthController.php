@@ -13,12 +13,12 @@ class AuthController extends Controller
 {
     public function showLogin(): View
     {
-        return view('auth', ['mode' => 'login']);
+        return view('login');
     }
 
     public function showRegister(): View
     {
-        return view('auth', ['mode' => 'register']);
+        return view('register');
     }
 
     public function register(Request $request): RedirectResponse
