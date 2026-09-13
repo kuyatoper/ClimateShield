@@ -34,6 +34,11 @@ php artisan serve
 
 Open `http://127.0.0.1:8000` in a browser.
 
+On Windows, double-click `start-climateshield.bat` whenever you want to open the
+website. It starts the local Laravel server in a separate window, so the site
+continues running after you close the original VS Code terminal. Keep the
+server window open while using the website.
+
 During development, use two terminals instead of `npm run build`:
 
 ```bash
