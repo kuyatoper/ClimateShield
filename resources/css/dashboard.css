@@ -1,0 +1,17 @@
+button,
+input,
+select,
+textarea {
+	font: inherit;
+}
+
+button {
+	-webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 900px) {
+	main {
+		max-width: 1180px;
+		margin-inline: auto;
+	}
+}
