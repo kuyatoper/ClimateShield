@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ClimateShield — Dashboard</title>
+  @if (file_exists(public_path('build/manifest.json')))
+    @vite('resources/css/dashboard.css')
+  @endif
 
   <!-- Typography: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
