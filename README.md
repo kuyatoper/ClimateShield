@@ -7,6 +7,42 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## ClimateShield Setup
+
+ClimateShield is a Laravel application. The repository contains the source code; generated dependencies and compiled assets are intentionally excluded from Git.
+
+### Requirements
+
+- PHP 8.2 or newer
+- Composer
+- Node.js 20 or newer
+- npm
+
+### Installation
+
+```bash
+git clone <repository-url>
+cd ClimateShield-mainGroup7
+composer install
+copy .env.example .env
+php artisan key:generate
+php artisan migrate
+npm install
+npm run build
+php artisan serve
+```
+
+Open `http://127.0.0.1:8000` in a browser.
+
+During development, use two terminals instead of `npm run build`:
+
+```bash
+npm run dev
+php artisan serve
+```
+
+The JavaScript and CSS source files are in `resources/js` and `resources/css`. The compiled files in `public/build` are generated locally and are not committed.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
