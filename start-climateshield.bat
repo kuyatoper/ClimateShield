@@ -15,4 +15,5 @@ if not exist "public\build\manifest.json" (
 
 echo ClimateShield is running at http://127.0.0.1:8000
 start "ClimateShield server" /D "%~dp0" cmd /k "php artisan serve --host=127.0.0.1 --port=8000"
+timeout /t 3 /nobreak >nul
 start "" "http://127.0.0.1:8000"
