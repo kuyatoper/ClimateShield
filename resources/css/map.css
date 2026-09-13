@@ -1,0 +1,10 @@
+button,
+input,
+select,
+textarea {
+	font: inherit;
+}
+
+#map {
+	min-height: 420px;
+}
