@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HazardController;
+use Illuminate\Support\Facades\Route;
 
-<<<<<<< HEAD
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login')->name('login.store');
@@ -30,11 +30,11 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/guides', function () {
         return view('guides');
     })->name('guides');
-});
-=======
-Route::get('/', function () {
-    return view('dashboard');
-});
 
-Route::resource('hazards', HazardController::class);
->>>>>>> 2c84ecf (Update web routes)
+    Route::get('/admin', [AdminController::class, 'index'])
+        ->middleware('admin')
+        ->name('admin.dashboard');
+
+    Route::resource('/admin/hazards', HazardController::class)
+        ->middleware('admin');
+});
