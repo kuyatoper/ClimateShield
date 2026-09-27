@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdminProjectController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\MapController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HazardController;
@@ -15,21 +19,21 @@ Route::middleware('guest')->group(function (): void {
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 Route::middleware('auth')->group(function (): void {
-    Route::get('/', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])
+    ->name('dashboard');
 
-    Route::get('/map', function () {
-        return view('map');
-    })->name('map');
+    Route::get('/map', [MapController::class, 'index'])
+    ->name('map');
 
-    Route::get('/projects', function () {
-        return view('project');
-    })->name('projects');
+    Route::get('/projects', [ProjectController::class, 'index'])
+    ->name('projects');
 
     Route::get('/guides', function () {
         return view('guides');
     })->name('guides');
+
+    Route::post('/hazards/report', [HazardController::class, 'report'])
+    ->name('hazards.report');
 
     Route::get('/admin', [AdminController::class, 'index'])
         ->middleware('admin')
@@ -37,4 +41,8 @@ Route::middleware('auth')->group(function (): void {
 
     Route::resource('/admin/hazards', HazardController::class)
         ->middleware('admin');
+
+    Route::resource('/admin/projects', AdminProjectController::class)
+    ->middleware('admin');
+        
 });

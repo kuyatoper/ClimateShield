@@ -64,35 +64,100 @@
     </header>
 
     <main>
-      <div class="section-title">Community Sustainability Initiatives</div>
+  <div class="section-title">Community Sustainability Initiatives</div>
 
-      <div class="card">
-        <div class="project-header">
-          <div class="project-title">🌳 Urban Canopy Expansion</div>
-          <span class="badge">Active</span>
-        </div>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Planting 1,500 shade trees to mitigate urban heat island effects in low-canopy neighborhoods.</p>
-        <div class="progress-bar"><div class="progress-fill" style="width: 82%;"></div></div>
-        <div class="meta-grid">
-          <div><strong>1,240 / 1,500</strong> Trees Planted</div>
-          <div style="text-align: right;"><strong>82%</strong> Funded</div>
-        </div>
-        <button class="btn-action" onclick="alert('Thank you for volunteering! Check your email for location updates.')">Join Volunteer Team</button>
+  @forelse ($projects as $project)
+
+    @php
+      $progress = $project->target_value > 0
+        ? min(100, round(($project->current_value / $project->target_value) * 100))
+        : 0;
+
+      $icon = match (strtolower($project->category)) {
+        'environment' => '🌳',
+        'energy' => '☀️',
+        default => '🌱',
+      };
+
+      $formattedCurrent = number_format($project->current_value, 0);
+      $formattedTarget = number_format($project->target_value, 0);
+    @endphp
+
+    <div class="card">
+      <div class="project-header">
+        <div class="project-title">{{ $icon }} {{ $project->title }}</div>
+        <span class="badge">{{ $project->status }}</span>
       </div>
 
-      <div class="card">
-        <div class="project-header">
-          <div class="project-title">☀️ Solar Microgrid Station</div>
-          <span class="badge">Funding</span>
-        </div>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Installing community solar batteries to maintain power during storm blackouts.</p>
-        <div class="progress-bar"><div class="progress-fill" style="width: 65%; background: var(--primary-blue);"></div></div>
-        <div class="meta-grid">
-          <div><strong>$13,000 / $20,000</strong> Raised</div>
-          <div style="text-align: right;"><strong>65%</strong> Complete</div>
-        </div>
-        <button class="btn-action" style="background: var(--text-main);" onclick="alert('Redirecting to secure micro-donation portal...')">Pledge Support ($10)</button>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        {{ $project->description }}
+      </p>
+
+      <div class="progress-bar">
+        <div
+          class="progress-fill"
+          style="width: {{ $progress }}%;"
+        ></div>
       </div>
+
+      <div class="meta-grid">
+        <div>
+          <strong>
+             @if (str_contains(strtolower($project->unit), 'php'))
+            ₱
+            @endif
+            {{ $formattedCurrent }} / 
+            @if (str_contains(strtolower($project->unit), 'php'))
+            ₱
+            @endif
+            {{ $formattedTarget }}
+          </strong>
+          {{ str_replace('PHP ', '', $project->unit) }}
+        </div>
+
+        <div style="text-align: right;">
+          <strong>{{ $progress }}%</strong> Complete
+        </div>
+      </div>
+
+      @if (strtolower($project->category) === 'environment')
+        <button
+          class="btn-action"
+          onclick="alert('Thank you for volunteering! Check your email for location updates.')"
+        >
+          Join Volunteer Team
+        </button>
+      @elseif (strtolower($project->category) === 'energy')
+        <button
+          class="btn-action"
+          style="background: var(--text-main);"
+          onclick="alert('Redirecting to secure micro-donation portal...')"
+        >
+          Pledge Support (₱10)
+        </button>
+      @else
+        <button
+          class="btn-action"
+          onclick="alert('Thank you for supporting this project!')"
+        >
+          Support Project
+        </button>
+      @endif
+    </div>
+
+  @empty
+
+    <div class="card">
+      <div class="project-header">
+        <div class="project-title">🌱 No Projects Available</div>
+      </div>
+
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        There are currently no community sustainability projects available.
+      </p>
+    </div>
+
+    @endforelse
     </main>
 
     <nav class="bottom-nav">

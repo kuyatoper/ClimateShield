@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  
   <style>
     :root {
       --bg-body: #F8F9FA;
@@ -123,61 +123,126 @@
 
     /* Interactive Map Canvas Simulator */
     .map-wrapper {
-      position: relative; flex: 1; min-height: calc(100vh - 220px);
-      background: #dbe7ec;
-      overflow: hidden;
-      animation: map-reveal 0.7s ease both;
-    }
+  position: relative;
+  width: 100%;
+  height: 600px;
+  min-height: 500px;
+  background: #dbe7ec;
+  overflow: hidden;
+  animation: map-reveal 0.7s ease both;
+}
 
-    #climateMap { position: absolute; inset: 0; }
-    .leaflet-container { font: inherit; }
-    .leaflet-control-zoom a { color: var(--text-main); }
-    .climate-marker {
-      width: 34px; height: 34px; border: 3px solid white; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; color: white;
-      font-size: 0.95rem; font-weight: 800; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.28);
-      animation: pin-pop 0.55s both, pin-pulse 3.2s 1.2s ease-in-out infinite;
-    }
+#climateMap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
 
-    .map-wrapper::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.03), transparent 42%, rgba(15, 23, 42, 0.12));
-      pointer-events: none;
-      z-index: 1;
-    }
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  font: inherit;
+  z-index: 0;
+}
 
-    /* Map Pins */
-    .map-pin {
-      position: absolute; width: 36px; height: 36px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      color: white; font-size: 1rem; cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-      transform: translate(-50%, -50%); transition: transform 0.2s;
-      z-index: 2;
-      animation: pin-pop 0.55s both, pin-pulse 3.2s 1.2s ease-in-out infinite;
-    }
-    .map-pin:nth-child(2) { animation-delay: 0.12s, 1.7s; }
-    .map-pin:nth-child(3) { animation-delay: 0.24s, 2.2s; }
-    .map-pin:hover { transform: translate(-50%, -50%) scale(1.15); animation-play-state: paused; }
-    .pin-flood { background: var(--danger-red); border: 2px solid white; }
-    .pin-tree { background: var(--warning-amber); border: 2px solid white; }
-    .pin-green { background: var(--success-green); border: 2px solid white; }
+.leaflet-control-zoom a {
+  color: var(--text-main);
+}
 
-    /* Map Popup Drawer */
-    .map-drawer {
-      position: absolute; bottom: 80px; left: 16px; right: 16px;
-      background: white; border-radius: var(--radius-lg); padding: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid var(--border-color);
-      transition: all 0.3s ease;
-      z-index: 3;
-      animation: drawer-in 0.65s 0.3s both;
-    }
-    .drawer-title { font-weight: 800; font-size: 0.95rem; display: flex; justify-content: space-between; }
-    .drawer-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
-    .drawer-desc { font-size: 0.85rem; margin-top: 8px; color: var(--text-main); }
+/* ClimateShield custom markers */
+.climate-marker {
+  width: 34px;
+  height: 34px;
+  border: 3px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 800;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.28);
+  animation: pin-pop 0.55s both,
+             pin-pulse 3.2s 1.2s ease-in-out infinite;
+}
 
+/* Map pins */
+.map-pin {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s;
+  z-index: 10;
+  animation: pin-pop 0.55s both,
+             pin-pulse 3.2s 1.2s ease-in-out infinite;
+}
+
+.map-pin:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+  animation-play-state: paused;
+}
+
+.pin-flood {
+  background: var(--danger-red);
+  border: 2px solid white;
+}
+
+.pin-tree {
+  background: var(--warning-amber);
+  border: 2px solid white;
+}
+
+.pin-green {
+  background: var(--success-green);
+  border: 2px solid white;
+}
+
+/* Map popup drawer */
+.map-drawer {
+  position: absolute;
+  bottom: 80px;
+  left: 16px;
+  right: 16px;
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  z-index: 20;
+  animation: drawer-in 0.65s 0.3s both;
+}
+
+.drawer-title {
+  font-weight: 800;
+  font-size: 0.95rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.drawer-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.drawer-desc {
+  font-size: 0.85rem;
+  margin-top: 8px;
+  color: var(--text-main);
+}
     /* Bottom Nav */
     .bottom-nav {
       position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
@@ -235,7 +300,7 @@
     <div class="filter-bar">
       <button class="filter-chip active" onclick="filterPins('all', this)">All Layers</button>
       <button class="filter-chip" onclick="filterPins('flood', this)">🌊 Floods</button>
-      <button class="filter-chip" onclick="filterPins('tree', this)">⚡ Hazards</button>
+      <button class="filter-chip" onclick="filterPins('hazard', this)">⚡ Hazards</button>
       <button class="filter-chip" onclick="filterPins('green', this)">🌳 Eco-Projects</button>
     </div>
 
@@ -247,13 +312,6 @@
     <div class="map-wrapper">
       <div id="climateMap" aria-label="ClimateShield live district map"></div>
       <div class="search-results" id="searchResults" hidden></div>
-
-      <!-- Drawer Info Box -->
-      <div class="map-drawer" id="mapDrawer">
-        <div class="drawer-title" id="dTitle">Select a pin on the map</div>
-        <div class="drawer-sub" id="dSub">Tap icons above to view real-time hazards</div>
-        <p class="drawer-desc" id="dDesc">Live GPS coordinates updating every 30 seconds.</p>
-      </div>
     </div>
 
     <nav class="bottom-nav">
@@ -264,37 +322,64 @@
     </nav>
   </div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script>
-    const mapReports = [
-      { category: 'flood', position: [14.5995, 120.9842], title: '🌊 Flash Flood Alert', location: 'Manila City Center', description: 'Water depth: 1.2 ft. Road closed to sedans.', color: '#EF4444', icon: '!' },
-      { category: 'tree', position: [14.6091, 121.0223], title: '⚡ Fallen Tree Branch', location: 'Quezon City', description: 'Blocking northbound traffic. Cleanup team en route.', color: '#F59E0B', icon: '🌳' },
-      { category: 'green', position: [14.5547, 121.0244], title: '🌱 Urban Tree Canopy', location: 'Makati Greenway', description: '350 new saplings planted this month.', color: '#10B981', icon: '🌳' }
-    ];
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const mapReports = @json($mapReports);
 
     const philippinesBounds = L.latLngBounds([4.2, 116.5], [21.5, 127.0]);
+
     const climateMap = L.map('climateMap', {
-      zoomControl: true,
-      attributionControl: true,
-      maxBounds: philippinesBounds,
-      maxBoundsViscosity: 1,
-      minZoom: 5
+        zoomControl: true,
+        attributionControl: true,
+        maxBounds: philippinesBounds,
+        maxBoundsViscosity: 1,
+        minZoom: 5
     }).setView([14.5995, 120.9842], 6);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
     }).addTo(climateMap);
 
     const reportMarkers = mapReports.map((report) => {
-      const icon = L.divIcon({
+    let color = '#F59E0B';
+    let icon = '⚠';
+
+    if (report.severity === 'critical') {
+        color = '#EF4444';
+        icon = '!';
+    } else if (report.severity === 'moderate') {
+        color = '#F59E0B';
+        icon = '⚠';
+    } else {
+        color = '#10B981';
+        icon = '✓';
+    }
+
+    const markerIcon = L.divIcon({
         className: '',
-        html: `<div class="climate-marker" style="background:${report.color}">${report.icon}</div>`,
+        html: `<div class="climate-marker" style="background:${color}">${icon}</div>`,
         iconSize: [34, 34],
         iconAnchor: [17, 17]
-      });
-      const marker = L.marker(report.position, { icon, title: report.location }).addTo(climateMap);
-      marker.on('click', () => showDrawer(report.title, report.location, report.description));
-      return { category: report.category, marker };
+    });
+
+    const marker = L.marker(report.position, {
+        icon: markerIcon,
+        title: report.location
+    }).addTo(climateMap);
+
+    marker.on('click', () => {
+        showDrawer(
+            report.title,
+            report.location,
+            report.description
+        );
+    });
+
+    return {
+    category: String(report.category).toLowerCase().trim(),
+    marker
+    };
     });
 
     let searchMarker;
@@ -361,16 +446,27 @@
     }
 
     function filterPins(category, btn) {
-      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-      btn.classList.add('active');
-      reportMarkers.forEach(({ category: pinCategory, marker }) => {
-        const shouldShow = category === 'all' || pinCategory === category;
+    document.querySelectorAll('.filter-chip').forEach(c => {
+        c.classList.remove('active');
+    });
+
+    btn.classList.add('active');
+
+    const selectedCategory = String(category).toLowerCase().trim();
+
+    reportMarkers.forEach(({ category: pinCategory, marker }) => {
+        const normalizedPinCategory = String(pinCategory).toLowerCase().trim();
+
+        const shouldShow =
+            selectedCategory === 'all' ||
+            normalizedPinCategory === selectedCategory;
+
         if (shouldShow) {
-          marker.addTo(climateMap);
+            marker.addTo(climateMap);
         } else {
-          marker.remove();
+            marker.remove();
         }
-      });
+    });
     }
   </script>
 </body>

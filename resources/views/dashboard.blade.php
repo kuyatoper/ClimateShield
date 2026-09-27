@@ -601,57 +601,108 @@
 
       <div class="metrics-row">
         <div class="metric-card">
-          <div class="metric-label">AQI</div>
-          <div class="metric-val">42</div>
-          <span class="metric-tag tag-good">Good</span>
+      <div class="metric-label">AQI</div>
+
+       <div class="metric-val">
+        {{ $aqi !== null ? round($aqi) : 'N/A' }}
+      </div>
+
+        @if ($aqi === null)
+      <span class="metric-tag tag-warn">Unavailable</span>
+        @elseif ($aqi <= 20)
+      <span class="metric-tag tag-good">Good</span>
+        @elseif ($aqi <= 40)
+      <span class="metric-tag tag-good">Fair</span>
+        @elseif ($aqi <= 60)
+      <span class="metric-tag tag-warn">Moderate</span>
+        @elseif ($aqi <= 80)
+      <span class="metric-tag tag-danger">Poor</span>
+        @elseif ($aqi <= 100)
+      <span class="metric-tag tag-danger">Very Poor</span>
+        @else
+      <span class="metric-tag tag-danger">Extremely Poor</span>
+        @endif
+      </div>
+        <div class="metric-card">
+        <div class="metric-label">Flood Risk</div>
+        <div class="metric-val">{{ $floodRisk }}</div>
+
+        @if ($floodRisk === 'CRITICAL')
+        <span class="metric-tag tag-danger">Level 4</span>
+        @elseif ($floodRisk === 'HIGH')
+        <span class="metric-tag tag-danger">Level 3</span>
+        @elseif ($floodRisk === 'MODERATE')
+        <span class="metric-tag tag-warn">Level 2</span>
+        @else
+        <span class="metric-tag tag-good">Level 1</span>
+        @endif
         </div>
         <div class="metric-card">
-          <div class="metric-label">Flood Risk</div>
-          <div class="metric-val">HIGH</div>
-          <span class="metric-tag tag-danger">Level 3</span>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Temp</div>
-          <div class="metric-val">31°C</div>
-          <span class="metric-tag tag-warn">Heat Spot</span>
+  <div class="metric-label">Temp</div>
+
+    <div class="metric-val">
+      {{ $temperature !== null ? $temperature . '°C' : 'N/A' }}
+      </div>
+
+        @if ($temperature !== null && $temperature >= 35)
+        <span class="metric-tag tag-danger">Extreme Heat</span>
+        @elseif ($temperature !== null && $temperature >= 33)
+        <span class="metric-tag tag-warn">Heat Spot</span>
+        @else
+        <span class="metric-tag tag-good">Normal</span>
+        @endif
         </div>
       </div>
 
       <!-- Hazard Feed -->
       <div class="section-head">
-        <div class="section-title">Active Hazard Reports</div>
+      <div class="section-title">Active Hazard Reports</div>
       </div>
 
-      <div id="hazardFeed">
+      @forelse ($hazards as $hazard)
 
-        <!-- Critical Card -->
-        <div class="card critical">
-          <div class="card-title-row">
-            <span class="card-title critical">⚠️ Flash Flood Warning</span>
-            <span class="time-stamp">12m ago</span>
-          </div>
-          <div class="location-text">📍 Main Street & 5th Ave Intersection</div>
-          <p class="card-desc">Water levels rising rapidly due to clogged drainage. High clearance vehicles only.</p>
-          <button class="btn-confirm" onclick="toggleVote(this, 18)">
-            ▲ Confirm Hazard ( <span class="num">18</span> )
-          </button>
+      @php
+        $cardClass = $hazard->severity === 'critical' ? 'critical' : 'warning';
+        $icon = $hazard->severity === 'critical' ? '⚠️' : '⚡';
+      @endphp
+
+    <div class="card {{ $cardClass }}">
+        <div class="card-title-row">
+            <span class="card-title {{ $cardClass }}">
+                {{ $icon }} {{ $hazard->title }}
+            </span>
+
+            <span class="time-stamp">
+                {{ $hazard->created_at->diffForHumans() }}
+            </span>
         </div>
 
-        <!-- Warning Card -->
-        <div class="card warning">
-          <div class="card-title-row">
-            <span class="card-title warning">⚡ Fallen Tree Branch</span>
-            <span class="time-stamp">42m ago</span>
-          </div>
-          <div class="location-text">📍 Oak Ridge Residential Zone</div>
-          <p class="card-desc">Large branch blocking northbound lane. Utility workers notified.</p>
-          <button class="btn-confirm" onclick="toggleVote(this, 9)">
-            ▲ Confirm Hazard ( <span class="num">9</span> )
-          </button>
+        <div class="location-text">
+            📍 {{ $hazard->location }}
         </div>
 
-      </div>
+        <p class="card-desc">
+            {{ $hazard->description }}
+        </p>
 
+        <button class="btn-confirm" onclick="toggleVote(this, 0)">
+            ▲ Confirm Hazard ( <span class="num">0</span> )
+        </button>
+    </div>
+
+      @empty
+
+    <div class="card">
+        <div class="card-title-row">
+            <span class="card-title">No Active Hazards</span>
+        </div>
+
+        <p class="card-desc">
+            There are currently no active environmental hazard reports.
+        </p>
+    </div>
+
+      @endforelse
       <!-- Sustainability Goals -->
       <div class="section-head">
         <div class="section-title">Sustainability Goals</div>
@@ -724,30 +775,50 @@
         <button class="close-btn" onclick="closeReportModal()">✕</button>
       </div>
 
-      <form id="hazardForm" onsubmit="addHazardReport(event)">
-        <div class="form-group">
-          <label class="form-label">Hazard Type</label>
-          <select class="form-select" id="formType" required>
-            <option value="critical">⚠️ Flash Flood / High Water</option>
-            <option value="warning">⚡ Fallen Tree / Branch Block</option>
-            <option value="warning">🔥 Urban Heat Spot</option>
-            <option value="critical">⚡ Damaged Power Lines</option>
-          </select>
-        </div>
+      <form id="hazardForm" method="POST" action="{{ route('hazards.report') }}">
+    @csrf
 
-        <div class="form-group">
-          <label class="form-label">Location / Landmark</label>
-          <input type="text" class="form-input" id="formLocation" placeholder="e.g. 7th St & Park Avenue" required>
-        </div>
+    <div class="form-group">
+        <label class="form-label">Hazard Type</label>
+        <select class="form-select" id="formType" name="type" required>
+            <option value="">Select hazard type</option>
+            <option value="Flash Flood / High Water">⚠️ Flash Flood / High Water</option>
+            <option value="Fallen Tree / Branch Block">⚡ Fallen Tree / Branch Block</option>
+            <option value="Urban Heat Spot">🔥 Urban Heat Spot</option>
+            <option value="Damaged Power Lines">⚡ Damaged Power Lines</option>
+        </select>
+    </div>
 
-        <div class="form-group">
-          <label class="form-label">Details & Notes</label>
-          <textarea class="form-textarea" id="formDesc" placeholder="Describe the current risk status..." required></textarea>
-        </div>
+    <div class="form-group">
+        <label class="form-label">Location / Landmark</label>
+        <input
+            type="text"
+            class="form-input"
+            id="formLocation"
+            name="location"
+            placeholder="e.g. 7th St & Park Avenue"
+            required
+        >
+      </div>
 
-        <button type="submit" class="fab-button" style="position: static; width: 100%; transform: none; margin-top: 10px;">
-          Submit Community Report
-        </button>
+      <div class="form-group">
+        <label class="form-label">Details & Notes</label>
+        <textarea
+            class="form-textarea"
+            id="formDesc"
+            name="description"
+            placeholder="Describe the current risk status..."
+            required
+        ></textarea>
+      </div>
+
+      <button
+        type="submit"
+        class="fab-button"
+        style="position: static; width: 100%; transform: none; margin-top: 10px;"
+        >
+        Submit Community Report
+      </button>
       </form>
     </div>
   </div>
