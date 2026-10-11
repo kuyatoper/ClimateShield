@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,6 +82,23 @@
         .brand span {
             color: var(--primary-blue);
         }
+
+        .brand-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: -0.4px;
+    }
+
+    .brand-title span {
+      color: var(--primary-blue);
+    }
+
+    .brand-title svg {
+      animation: shield-pulse 3s ease-in-out infinite;
+    }
 
         .header-right {
             display: flex;
@@ -174,6 +192,18 @@
             border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
+        .btn-success {
+            background: var(--success-bg);
+            color: #047857;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .btn-warning {
+            background: var(--warning-bg);
+            color: #B45309;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
         .alert {
             padding: 12px 14px;
             border-radius: var(--radius-md);
@@ -245,6 +275,13 @@
             margin-top: 3px;
         }
 
+        .badges {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
         .badge {
             display: inline-block;
             padding: 5px 9px;
@@ -266,6 +303,21 @@
 
         .severity-high,
         .severity-critical {
+            background: var(--danger-bg);
+            color: var(--danger-red);
+        }
+
+        .verification-pending {
+            background: var(--warning-bg);
+            color: #B45309;
+        }
+
+        .verification-verified {
+            background: var(--success-bg);
+            color: #047857;
+        }
+
+        .verification-rejected {
             background: var(--danger-bg);
             color: var(--danger-red);
         }
@@ -308,7 +360,9 @@
             flex-wrap: wrap;
         }
 
-        .delete-form {
+        .delete-form,
+        .verify-form,
+        .reject-form {
             display: inline;
         }
 
@@ -330,6 +384,18 @@
             .page-head .btn {
                 width: 100%;
             }
+
+            .hazard-top {
+                flex-direction: column;
+            }
+
+            .badges {
+                justify-content: flex-start;
+            }
+
+            .hazard-info {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -337,9 +403,12 @@
 <body>
 
 <header>
-    <div class="brand">
-        Climate<span>Shield</span> Admin
-    </div>
+    <div class="brand-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0EA5E9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        Climate<span> Shield</span>Admin
+      </div>
 
     <div class="header-right">
         @auth
@@ -363,7 +432,7 @@
         <div>
             <h1 class="page-title">Hazard Management</h1>
             <p class="page-subtitle">
-                Create, review, update, and remove environmental hazard reports.
+                Create, review, verify, update, and remove environmental hazard reports.
             </p>
         </div>
 
@@ -400,6 +469,7 @@
                 <article class="hazard-card">
 
                     <div class="hazard-top">
+
                         <div>
                             <div class="hazard-title">
                                 {{ $hazard->title }}
@@ -410,9 +480,18 @@
                             </div>
                         </div>
 
-                        <span class="badge severity-{{ $hazard->severity }}">
-                            {{ $hazard->severity }}
-                        </span>
+                        <div class="badges">
+
+                            <span class="badge severity-{{ $hazard->severity }}">
+                                {{ $hazard->severity }}
+                            </span>
+
+                            <span class="badge verification-{{ $hazard->verification_status }}">
+                                {{ $hazard->verification_status }}
+                            </span>
+
+                        </div>
+
                     </div>
 
                     <div class="hazard-info">
@@ -445,6 +524,36 @@
                         >
                             View
                         </a>
+
+                        @if ($hazard->verification_status === 'pending')
+
+                            <form
+                                method="POST"
+                                action="{{ route('hazards.verify', $hazard) }}"
+                                class="verify-form"
+                                onsubmit="return confirm('Verify this hazard report?');"
+                            >
+                                @csrf
+
+                                <button type="submit" class="btn btn-success">
+                                    ✓ Verify
+                                </button>
+                            </form>
+
+                            <form
+                                method="POST"
+                                action="{{ route('hazards.reject', $hazard) }}"
+                                class="reject-form"
+                                onsubmit="return confirm('Reject this hazard report?');"
+                            >
+                                @csrf
+
+                                <button type="submit" class="btn btn-warning">
+                                    ✕ Reject
+                                </button>
+                            </form>
+
+                        @endif
 
                         <a
                             href="{{ route('hazards.edit', $hazard) }}"

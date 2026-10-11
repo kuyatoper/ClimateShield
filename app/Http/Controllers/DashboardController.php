@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\Hazard;
 use Illuminate\View\View;
 use App\Services\WeatherService;
@@ -13,6 +14,8 @@ class DashboardController extends Controller
         $hazards = Hazard::where('status', 'active')
             ->latest()
             ->get();
+
+        $projects = Project::latest()->get();
 
         $activeFloods = $hazards->filter(function ($hazard) {
             return strtolower(trim($hazard->type)) === 'flood';
@@ -44,16 +47,19 @@ class DashboardController extends Controller
         $airQuality = $weatherService->getCebuAirQuality();
 
         $aqi = $airQuality['current']['european_aqi'] ?? null;
+        $pm25 = $airQuality['current']['pm2_5'] ?? null;
 
         return view('dashboard', compact(
-            'hazards',
-            'floodRisk',
-            'floodLevel',
-            'temperature',
-            'humidity',
-            'rainfall',
-            'windSpeed',
-            'aqi'
+        'hazards',
+        'projects',
+        'floodRisk',
+        'floodLevel',
+        'temperature',
+        'humidity',
+        'rainfall',
+        'windSpeed',
+        'aqi',
+        'pm25'
         ));
     }
 }

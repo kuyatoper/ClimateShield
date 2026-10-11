@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  
+
   <style>
     :root {
       --bg-body: #F8F9FA;
@@ -63,8 +63,36 @@
       border-bottom: 1px solid var(--border-color);
       display: flex; justify-content: space-between; align-items: center;
     }
-    .brand-title { font-size: 1.2rem; font-weight: 800; }
-    .brand-title span { color: var(--primary-blue); }
+
+
+.brand-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    color: #0F172A;
+    white-space: nowrap;
+}
+
+.brand-shield {
+    width: 27px;
+    height: 30px;
+    flex-shrink: 0;
+    color: #0EA5E9;
+    display: block;
+}
+
+.brand-name {
+    color: #0F172A;
+}
+
+.brand-name span {
+    color: #0EA5E9;
+}
+
+
     header > div:last-child { animation: fade-slide-in 0.55s 0.12s both; }
 
     /* Map Controls Bar */
@@ -293,7 +321,25 @@
 
   <div class="app-container">
     <header>
-      <div class="brand-title">Climate<span>Shield</span></div>
+
+
+<div class="brand-title">
+    <svg class="brand-shield"
+         xmlns="http://www.w3.org/2000/svg"
+         viewBox="0 0 24 24"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="2.2"
+         stroke-linecap="round"
+         stroke-linejoin="round"
+         aria-hidden="true">
+        <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z"/>
+    </svg>
+
+    <span class="brand-name">Climate<span> Shield</span></span>
+</div>
+
+
       <div style="font-size: 0.8rem; font-weight: 700;">🗺️ District Live Map</div>
     </header>
 

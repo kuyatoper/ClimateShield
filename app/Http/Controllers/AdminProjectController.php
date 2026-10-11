@@ -23,14 +23,25 @@ class AdminProjectController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-            'category' => ['required', 'string', 'max:255'],
-            'status' => ['required', 'string', 'max:255'],
-            'current_value' => ['required', 'numeric', 'min:0'],
-            'target_value' => ['required', 'numeric', 'min:0'],
-            'unit' => ['required', 'string', 'max:255'],
-        ]);
+    'title' => ['required', 'string', 'max:255'],
+    'description' => ['required', 'string'],
+    'category' => ['required', 'string', 'max:255'],
+    'status' => ['required', 'string', 'max:255'],
+
+    'start_date' => ['nullable', 'date'],
+    'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+
+    'current_value' => ['required', 'numeric', 'min:0'],
+    'target_value' => ['required', 'numeric', 'min:0'],
+    'unit' => ['required', 'string', 'max:255'],
+    ]);
+
+    if (
+    $validated['target_value'] > 0 &&
+    $validated['current_value'] >= $validated['target_value']
+    ) {
+    $validated['status'] = 'Completed';
+    }
 
         Project::create($validated);
 
@@ -47,14 +58,25 @@ class AdminProjectController extends Controller
     public function update(Request $request, Project $project)
     {
         $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-            'category' => ['required', 'string', 'max:255'],
-            'status' => ['required', 'string', 'max:255'],
-            'current_value' => ['required', 'numeric', 'min:0'],
-            'target_value' => ['required', 'numeric', 'min:0'],
-            'unit' => ['required', 'string', 'max:255'],
-        ]);
+    'title' => ['required', 'string', 'max:255'],
+    'description' => ['required', 'string'],
+    'category' => ['required', 'string', 'max:255'],
+    'status' => ['required', 'string', 'max:255'],
+
+    'start_date' => ['nullable', 'date'],
+    'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+
+    'current_value' => ['required', 'numeric', 'min:0'],
+    'target_value' => ['required', 'numeric', 'min:0'],
+    'unit' => ['required', 'string', 'max:255'],
+    ]);
+
+    if (
+    $validated['target_value'] > 0 &&
+    $validated['current_value'] >= $validated['target_value']
+) {
+    $validated['status'] = 'Completed';
+}
 
         $project->update($validated);
 

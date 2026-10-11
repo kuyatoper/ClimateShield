@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Hazard extends Model
 {
     protected $fillable = [
-    'title',
-    'type',
-    'description',
-    'location',
-    'latitude',
-    'longitude',
-    'severity',
-    'status',
-];
+        'title',
+        'type',
+        'description',
+        'location',
+        'latitude',
+        'longitude',
+        'severity',
+        'status',
+        'verification_status',
+    ];
 }

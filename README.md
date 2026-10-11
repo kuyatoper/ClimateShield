@@ -1,3 +1,304 @@
+# 🛡️ ClimateShield
+
+### Environmental Climate Monitoring & Disaster Awareness System
+
+ClimateShield is a web-based environmental monitoring and disaster awareness platform designed to help users monitor current environmental conditions, view reported hazards, and access information that can help communities prepare for climate-related risks.
+
+The system combines real-time environmental data with community hazard reporting and administrative management tools.
+
+---
+
+## 🌍 Features
+
+### 🌦️ Environmental Monitoring
+
+ClimateShield displays current environmental conditions using external weather and air-quality data.
+
+* 🌡️ Temperature
+* 💧 Humidity
+* 🌧️ Precipitation
+* 💨 Wind speed
+* 🌫️ Air Quality Index (AQI)
+* 🚨 Flood risk assessment
+
+### 🗺️ Hazard Map
+
+Users can view reported environmental hazards through an interactive map.
+
+Supported hazard information includes:
+
+* Hazard type
+* Severity
+* Location
+* Description
+* Current status
+* Report information
+
+### 🚨 Hazard Reporting
+
+Authenticated users can submit reports about environmental hazards they encounter.
+
+Reports can be reviewed and managed through the administrative system.
+
+### 👤 User Authentication
+
+ClimateShield provides user authentication features including:
+
+* User registration
+* Login
+* Logout
+* Protected application pages
+* Role-based administrative access
+
+### 🛠️ Administration
+
+Administrators can manage environmental information through dedicated administrative pages.
+
+Admin functionality includes:
+
+* Hazard management
+* Project management
+* Hazard review
+* Environmental data management
+
+### 🌱 Environmental Projects
+
+Users can view environmental and climate-related projects managed through the system.
+
+### 📚 Environmental Guides
+
+ClimateShield provides educational guides containing information related to environmental awareness and disaster preparedness.
+
+---
+
+## 🧰 Technology Stack
+
+| Technology         | Purpose                      |
+| ------------------ | ---------------------------- |
+| **Laravel 13**     | Backend web framework        |
+| **PHP 8.3+**       | Server-side programming      |
+| **Blade**          | Application views            |
+| **JavaScript**     | Frontend interactions        |
+| **CSS**            | User interface styling       |
+| **MySQL / SQLite** | Database                     |
+| **Open-Meteo API** | Weather and air-quality data |
+| **Git / GitHub**   | Version control              |
+
+---
+
+## 🌦️ External Data
+
+ClimateShield currently uses the Open-Meteo API to retrieve environmental information.
+
+Weather data includes:
+
+* Temperature
+* Relative humidity
+* Precipitation
+* Wind speed
+
+Air-quality data includes:
+
+* European AQI
+* PM2.5
+* PM10
+
+The application currently uses Cebu-area coordinates for environmental monitoring.
+
+---
+
+## 📁 Project Structure
+
+```text
+ClimateShield/
+│
+├── app/
+│   ├── Http/
+│   │   └── Controllers/
+│   ├── Models/
+│   └── Services/
+│
+├── database/
+│   ├── factories/
+│   ├── migrations/
+│   └── seeders/
+│
+├── resources/
+│   ├── css/
+│   ├── js/
+│   └── views/
+│
+├── routes/
+│   └── web.php
+│
+├── public/
+│
+├── tests/
+│
+├── composer.json
+├── package.json
+└── README.md
+```
+
+---
+
+## ⚙️ Requirements
+
+Before installing ClimateShield, make sure the following are installed:
+
+* PHP 8.3 or newer
+* Composer
+* Node.js 20 or newer
+* npm
+* Git
+* MySQL or SQLite
+
+---
+
+## 🚀 Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/kuyatoper/ClimateShield.git
+cd ClimateShield
+```
+
+Install PHP dependencies:
+
+```bash
+composer install
+```
+
+Create the environment file:
+
+```bash
+copy .env.example .env
+```
+
+Generate the application key:
+
+```bash
+php artisan key:generate
+```
+
+Configure the database in `.env`, then run:
+
+```bash
+php artisan migrate
+```
+
+Install frontend dependencies:
+
+```bash
+npm install
+```
+
+Build the frontend:
+
+```bash
+npm run build
+```
+
+Start the Laravel development server:
+
+```bash
+php artisan serve
+```
+
+Open:
+
+```text
+http://127.0.0.1:8000
+```
+
+---
+
+## 💻 Development
+
+During development, use:
+
+```bash
+npm run dev
+```
+
+and in another terminal:
+
+```bash
+php artisan serve
+```
+
+This allows frontend assets to update while developing.
+
+---
+
+## 🔐 Application Areas
+
+The application currently contains the following major areas:
+
+```text
+Dashboard
+   │
+   ├── Environmental Monitoring
+   ├── Flood Risk
+   ├── Hazard Reports
+   └── Current Conditions
+        │
+        ├── Hazard Map
+        ├── Projects
+        └── Environmental Guides
+
+Administration
+   │
+   ├── Hazard Management
+   └── Project Management
+```
+
+---
+
+## 🎯 Project Goal
+
+ClimateShield aims to provide a centralized platform where users can:
+
+1. Monitor environmental conditions.
+2. View reported hazards.
+3. Report environmental incidents.
+4. Access environmental and disaster-preparedness information.
+5. Allow administrators to manage environmental reports and projects.
+
+The project focuses on improving environmental awareness and making climate-related information easier to access.
+
+---
+
+## 🔮 Planned Improvements
+
+Future development may include:
+
+* 📊 Environmental trend charts
+* 🔔 Real-time environmental alerts
+* 📍 Improved hazard filtering
+* 🗺️ Enhanced hazard visualization
+* 📈 Historical environmental data
+* ⚡ API response caching
+* 🧪 Expanded automated testing
+* 📱 Further mobile optimization
+
+---
+
+## 👥 Project
+
+**ClimateShield — Environmental Climate Monitoring & Disaster Awareness System**
+
+Developed as an academic software project.
+
+---
+
+## 📄 License
+
+This project is developed for educational purposes.
+
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">

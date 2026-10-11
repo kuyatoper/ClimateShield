@@ -73,6 +73,23 @@
             color: var(--primary-blue);
         }
 
+        .brand-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: -0.4px;
+    }
+
+    .brand-title span {
+      color: var(--primary-blue);
+    }
+
+    .brand-title svg {
+      animation: shield-pulse 3s ease-in-out infinite;
+    }
+
         .back-link {
             text-decoration: none;
             color: var(--text-muted);
@@ -214,9 +231,12 @@
 <body>
 
 <header>
-    <div class="brand">
-        Climate<span>Shield</span> Admin
-    </div>
+    <div class="brand-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0EA5E9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        Climate<span> Shield</span>Admin
+      </div>
 
     <a href="{{ route('hazards.index') }}" class="back-link">
         ← Back to Hazards

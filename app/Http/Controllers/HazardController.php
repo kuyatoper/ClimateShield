@@ -22,23 +22,26 @@ class HazardController extends Controller
     }
 
     public function store(Request $request): RedirectResponse
-{
-    $validated = $request->validate([
-        'title' => ['required', 'string', 'max:255'],
-        'type' => ['required', 'string', 'max:255'],
-        'description' => ['required', 'string'],
-        'location' => ['required', 'string', 'max:255'],
-        'latitude' => ['required', 'numeric', 'between:-90,90'],
-        'longitude' => ['required', 'numeric', 'between:-180,180'],
-        'severity' => ['required', 'in:low,moderate,high,critical'],
-        'status' => ['required', 'in:active,resolved'],
-    ]);
+    {
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'type' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'location' => ['required', 'string', 'max:255'],
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
+            'severity' => ['required', 'in:low,moderate,high,critical'],
+            'status' => ['required', 'in:active,resolved'],
+        ]);
 
-    Hazard::create($validated);
+        // Hazards created directly by an admin are considered verified.
+        $validated['verification_status'] = 'verified';
 
-    return redirect()
-        ->route('hazards.index')
-        ->with('success', 'Hazard created successfully.');
+        Hazard::create($validated);
+
+        return redirect()
+            ->route('hazards.index')
+            ->with('success', 'Hazard created successfully.');
     }
 
     public function show(Hazard $hazard): View
@@ -58,6 +61,8 @@ class HazardController extends Controller
             'type' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'location' => ['required', 'string', 'max:255'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'severity' => ['required', 'in:low,moderate,high,critical'],
             'status' => ['required', 'in:active,resolved'],
         ]);
@@ -92,11 +97,34 @@ class HazardController extends Controller
             'description' => $validated['description'],
             'location' => $validated['location'],
             'severity' => 'moderate',
-            'status' => 'resolved',
+            'status' => 'active',
+            'verification_status' => 'pending',
         ]);
 
         return redirect()
             ->route('dashboard')
             ->with('success', 'Hazard report submitted successfully.');
+    }
+
+    public function verify(Hazard $hazard): RedirectResponse
+    {
+        $hazard->update([
+            'verification_status' => 'verified',
+        ]);
+
+        return redirect()
+            ->route('hazards.index')
+            ->with('success', 'Hazard has been verified.');
+    }
+
+    public function reject(Hazard $hazard): RedirectResponse
+    {
+        $hazard->update([
+            'verification_status' => 'rejected',
+        ]);
+
+        return redirect()
+            ->route('hazards.index')
+            ->with('success', 'Hazard has been rejected.');
     }
 }

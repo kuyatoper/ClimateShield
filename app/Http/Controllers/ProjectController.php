@@ -9,11 +9,43 @@ use Illuminate\View\View;
 class ProjectController extends Controller
 {
     public function index(): View
-    {
-        $projects = Project::latest()->get();
+{
+    $projects = Project::latest()->get();
 
-        return view('project', compact('projects'));
-    }
+    $upcomingProjects = $projects->filter(function ($project) {
+        return $project->start_date
+            && $project->start_date->isFuture();
+    });
+
+    $ongoingProjects = $projects->filter(function ($project) {
+        return $project->start_date
+            && $project->start_date->isPast()
+            && (
+                !$project->end_date ||
+                $project->end_date->isFuture()
+            )
+            && strtolower(trim($project->status)) !== 'completed';
+    });
+
+    $completedProjects = $projects->filter(function ($project) {
+    return strtolower(trim($project->status)) === 'completed'
+        || (
+            $project->target_value > 0 &&
+            $project->current_value >= $project->target_value
+        )
+        || (
+            $project->end_date &&
+            $project->end_date->isPast()
+        );
+    });
+
+    return view('project', compact(
+        'projects',
+        'upcomingProjects',
+        'ongoingProjects',
+        'completedProjects'
+    ));
+}
 
     public function store(Request $request)
     {

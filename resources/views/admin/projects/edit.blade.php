@@ -159,6 +159,30 @@
             </select>
         </div>
 
+        {{-- Start Date --}}
+<div class="form-group">
+    <label for="start_date">Start Date</label>
+
+    <input
+        type="date"
+        id="start_date"
+        name="start_date"
+        value="{{ old('start_date', optional($project->start_date)->format('Y-m-d')) }}"
+    >
+    </div>
+
+    {{-- End Date --}}
+    <div class="form-group">
+    <label for="end_date">End Date</label>
+
+    <input
+        type="date"
+        id="end_date"
+        name="end_date"
+        value="{{ old('end_date', optional($project->end_date)->format('Y-m-d')) }}"
+    >
+    </div>
+
         <div class="form-group">
             <label for="current_value">Current Value</label>
             <input
